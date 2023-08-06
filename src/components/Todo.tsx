@@ -1,6 +1,6 @@
 import React, { useState } from "react";
+import { FaCheckCircle, FaCircle, FaMarker, FaTrash } from "react-icons/fa";
 import { styled } from "styled-components";
-import "../App.css";
 
 
 interface TodoProps {
@@ -16,34 +16,42 @@ const FormChild = styled.div`
   grid-template-columns: 5fr;
   width: 50%;
 `
+const iconStyle: React.CSSProperties = {
+    color: 'black',
+    fontSize: '24px',
+}
 
 export default function Todo({ todo, setTodoList }: TodoProps) {
     const { order, placeholder, innerText } = todo;
-    const [isDisabled, setIsDisabled] = useState(false);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         const updatedTodo = { ...todo, innerText: e.target.value };
         setTodoList((prev) => prev.map((t) => t.order === todo.order ? updatedTodo : t));
     }
-    const toggleInputState = (): void => {
-        setIsDisabled(!isDisabled);
-    }
+
     const handleDelete = (): void => {
-        setTodoList((prev: Todo[]) => {
+        setTodoList((prev) => {
             const filtered = prev.filter((todo) => todo.order !== order);
-            const updatedOrder = filtered.map((todo, index) => ({
+            const updatedOrder = filtered.map((t, index) => ({
                 innerText: filtered[index].innerText,
                 placeholder: (index + 1) + "번째 할 일",
                 order: index + 1,
+                done: filtered[index].done
             }));
             return updatedOrder;
         })
     }
+    const handleDone = (): void => {
+        setTodoList((prev) => {
+            const updatedTodo = { ...todo, done: !todo.done };
+            return prev.map((t) => t.order === order ? updatedTodo : t);
+        })
+    }
     return (
-
         <FormChild>
-            <input onChange={handleInputChange} value={innerText} placeholder={placeholder} disabled={isDisabled} type="text" />
-            <button onClick={toggleInputState}>{isDisabled ? "수정" : "입력"}</button>
-            <button onClick={handleDelete}>삭제</button>
+            {todo.done ? <FaCheckCircle style={iconStyle} /> : <FaCircle style={iconStyle} />}
+            <input onChange={handleInputChange} value={innerText} placeholder={placeholder} type="text" />
+            <FaTrash onClick={handleDelete} />
+            <FaMarker onClick={handleDone} />
         </FormChild>
     )
 }
