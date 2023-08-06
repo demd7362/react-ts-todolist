@@ -32,7 +32,7 @@ export default function Todo({ todo, setTodoList }: TodoProps) {
         setTodoList((prev) => {
             const filtered = prev.filter((todo) => todo.order !== order);
             const updatedOrder = filtered.map((t, index) => ({
-                innerText: filtered[index].innerText,
+                innerText: t.innerText || "",
                 placeholder: (index + 1) + "번째 할 일",
                 order: index + 1,
                 done: filtered[index].done
@@ -49,7 +49,7 @@ export default function Todo({ todo, setTodoList }: TodoProps) {
     return (
         <FormChild>
             {todo.done ? <FaCheckCircle style={iconStyle} /> : <FaCircle style={iconStyle} />}
-            <input onChange={handleInputChange} value={innerText} placeholder={placeholder} type="text" />
+            <input onChange={handleInputChange} value={innerText} placeholder={placeholder} disabled={todo.done} type="text" />
             <FaTrash onClick={handleDelete} />
             <FaMarker onClick={handleDone} />
         </FormChild>

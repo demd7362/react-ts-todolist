@@ -21,7 +21,7 @@ function App() {
   const addTodoList = () => {
 
     const newTodo: Todo = {
-      order: todoList.length,
+      order: todoList.length + 1,
       placeholder: todoList.length + 1 + '번째 할 일',
       done: false
     }
