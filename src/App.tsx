@@ -1,30 +1,45 @@
-import { useState } from 'react';
-import './App.css';
+import { useCallback, useState } from 'react';
+import { createGlobalStyle, styled } from 'styled-components';
 import Todo from './components/Todo';
 
-
-interface Todo{
-  order: number;
-  text: string;
-  
-}
-function App(){
-  const [todoListCount,setTodoListCount] = useState<Todo[]>([]);
-  const handleTodoList = (isIncrease:boolean) => {
-    setTodoListCount((prev:number)=>{
-      if(!isIncrease && prev === 0){
-        return prev;
-      }
-      return prev + (isIncrease ? 1 : -1);
-    })
+const GlobalStyle = createGlobalStyle`
+  body {
+    margin: 0;
+    padding: 0;
   }
-  
+`
+const Form = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+function App() {
+  const [todoList, setTodoList] = useState<Todo[]>([]);
+  const addTodoList = () => {
+
+    const newTodo: Todo = {
+      order: todoList.length,
+      placeholder: todoList.length + 1 + '번째 할 일',
+    }
+    setTodoList((prev: Todo[]): Todo[] => {
+      return [...prev, newTodo];
+    })
+
+  }
+
   return (
-    <div className='form'>
-      {[...Array(todoListCount).keys()].map(index=>{
-        return <Todo key={index} handleTodoList={handleTodoList}/>
-      })}
-    </div>
+    <>
+      <GlobalStyle />
+
+      <Form>
+        <button onClick={addTodoList}>추가</button>
+        {todoList.map((todo: Todo) => {
+          return <Todo key={todo.order} todo={todo} setTodoList={setTodoList} />
+        })}
+      </Form>
+    </>
   );
 }
 export default App;
